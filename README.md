@@ -4,7 +4,17 @@
 
 Author: Jared Wilder. First public timestamp: 2026-09-11.
 
-For a graph `G`, `tc(G)` is the least number of triangle-free graphs whose union is `G`. This repository is the broad subject home for the structural/fiber theory built around Erdős #595. The focused formal/cardinal barrier tower remains at `jaredwilder/erdos595-barrier-tower`; the two repositories cover different lanes of the same larger problem area.
+This repository is the broad subject home for the structural/fiber theory built around Erdős #595. The focused formal/cardinal barrier tower remains at `jaredwilder/erdos595-barrier-tower`; the two repositories cover different lanes of the same larger problem area.
+
+## Definition and naming warning
+
+Here
+
+`tc(G) = min { k : E(G) is covered by k triangle-free subgraphs }`.
+
+For finite `k` this is equivalently the least number of edge colors needed so that **no triangle of `G` is monochromatic**: from a cover, assign each edge to one triangle-free layer containing it; conversely, the color classes of such a coloring are triangle-free layers.
+
+This use of **triangle-cover number** is easy to confuse with several established but different graph invariants that are also called triangle cover/covering numbers, including minimum sets of triangles covering edges and minimum edge/vertex transversals meeting every triangle. Those are **not** the invariant studied here. When citing this repository, the definition above—not the name alone—is authoritative.
 
 ## Vertex-partition compression
 
@@ -14,7 +24,11 @@ For a graph `G`, `tc(G)` is the least number of triangle-free graphs whose union
 
 Assign binary codes to the parts and route every cross-edge to the first coordinate in which the two part-codes differ. Each cross-edge layer is bipartite, hence triangle-free; internal edges contribute the supremum.
 
-This compression inequality drives the cardinal layer of the program.
+A more general bank theorem, **RG01**, replaces the binary-code bound by the bipartite-cover number of the quotient graph:
+
+`tc(G) <= bc(Q_P) + sup_{Q in P} tc(G[Q])`.
+
+This compression mechanism drives the cardinal layer of the program.
 
 ## The induced ideal and cardinal invariants
 
@@ -35,7 +49,16 @@ These are structural/cardinal consequences of the compression mechanism, not mer
 
 **R3K06.** Given a finite K4-free graph together with its stable partition and realized triangle-type fiber system, deciding whether a coherent section exists is **NP-complete**. NP-hardness already holds when branch domains have size three.
 
-The reduction is arranged so that the output graph remains K4-free; this is part of the theorem rather than an incidental complexity statement.
+This is backed by an explicit reduction chain in the public card bank, not by an appeal to generic CSP hardness:
+
+1. **R3K03 — arbitrary-relation strip.** Every finite binary relation `R subset A x B` is realized as the exact boundary projection of a finite **K4-free** stable-partition graph gadget whose four realized triangle types form a path.
+2. **R3K05 — universal binary-CSP realization.** Attach one private R3K03 strip per binary constraint. The result is polynomial-size, remains K4-free, and has a coherent section exactly when the original binary CSP has a satisfying assignment.
+3. **R3K06 — hardness.** Apply R3K05 to graph 3-COLORING: one 3-value variable per input vertex and one inequality relation per input edge. Coherent sections are exactly proper 3-colorings.
+4. Membership in NP is direct: a proposed section gives one representative edge per nonempty fiber, and all realized triangle-type constraints can be checked in polynomial time.
+
+The bank also records **R3K21**: with incidence cyclomatic number bounded by fixed `r` and fiber-domain size bounded by `d`, coherence is decidable in `O(d^r poly(N))`; the unrestricted-rank problem remains NP-complete by R3K06.
+
+Historical novelty of this K4-free realization/complexity package is **not yet adjudicated**. The theorem chain is public and proof-bodied; priority is a separate literature question.
 
 ## Four independent barriers to local certification
 
@@ -72,6 +95,8 @@ Thus the number of coherent sections is exactly `|Fix(Pi)|`.
 - `K4`.
 
 The proof uses `sum_v(deg(v)-2)=4` followed by the possible kernel orders. Historical novelty is not asserted; the classification is retained because it is the exact finite structural interface used by the rest of the program.
+
+**R3K11** then converts those four kernels into four exact coherence mechanisms: four-way intersection, ternary join, cycle monodromy, or a four-variable binary CSP. There is no fifth branch-kernel mechanism at cycle rank three within the stated reduction.
 
 ### Deletion spectra
 
